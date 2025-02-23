@@ -50,11 +50,7 @@
 </body>
 
 <script>
-    // console.log(window.StompJs);
-
     function setConnected(connected) {
-        console.log('In setConnected function: ' + connected);
-
         document.getElementById('sendMessageBtn').disabled = !connected;
     }
 
@@ -62,24 +58,29 @@
         console.log('In connect function: ');
 
         var socket = new SockJS('/chat');
-        // var socket = new SockJS('http://localhost:8080/chat');
-
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
             setConnected(true);
             stompClient.subscribe('/topic/messages', function (message) {
-                console.log('Message: ' + message);
-                console.log('Message Parsed: ' + JSON.parse(message.body));
+                console.log('Message: ' + message + ', Message Parsed: ' + JSON.parse(message.body));
                 showMessage(JSON.parse(message.body));
             });
+
+            // Load previous messages when connecting
+            fetch('/chat/history')
+                .then(response => response.json())
+                .then(messages => messages.forEach(showMessage));
+
         }, function (error) {
             console.error('STOMP Connection Error:', error);
+            setConnected(false);
         });
     }
 
     function showMessage(message) {
         console.log('In showMessage function: ' + message);
+        console.log(message);
 
         var chatBox = document.getElementById('chat-box');
         var messageElement = document.createElement('div');
@@ -107,7 +108,6 @@
 
     document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
     window.onload = connect;
-
 </script>
 
 </html>
