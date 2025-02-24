@@ -50,12 +50,26 @@
 </body>
 
 <script>
+    let stompClient = null;
+
     function setConnected(connected) {
         document.getElementById('sendMessageBtn').disabled = !connected;
+        if(connected) {
+            document.getElementById('sendMessageBtn').classList.add('btn-primary');
+            document.getElementById('sendMessageBtn').classList.remove('btn-secondary');
+        } else {
+            document.getElementById('sendMessageBtn').classList.add('btn-secondary');
+            document.getElementById('sendMessageBtn').classList.remove('btn-primary');
+        }
     }
 
     function connect() {
         console.log('In connect function: ');
+
+        if (stompClient !== null) {
+            console.log("Already connected.");
+            return;
+        }
 
         var socket = new SockJS('/chat');
         stompClient = Stomp.over(socket);
@@ -75,6 +89,9 @@
         }, function (error) {
             console.error('STOMP Connection Error:', error);
             setConnected(false);
+
+            // Attempt reconnection after 5 seconds
+            setTimeout(connect, 5000);
         });
     }
 
