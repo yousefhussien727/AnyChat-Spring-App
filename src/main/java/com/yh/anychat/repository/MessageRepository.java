@@ -9,13 +9,17 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.yh.anychat.model.ChatMessage;
+import com.yh.anychat.model.ChatRoom;
 
 @Repository
-public interface ChatRepository extends JpaRepository<ChatMessage, Long> {
+public interface MessageRepository extends JpaRepository<ChatMessage, Long> {
     // Some Methods for Future Use
 
     // Fetch messages by sender
     List<ChatMessage> findBySender(String sender);
+
+    // Fetch all messages by chat room
+    List<ChatMessage> findByChatRoom(ChatRoom chatRoom);
 
     // Fetch messages sorted by timestamp (oldest first)
     List<ChatMessage> findAllByOrderByTimestampAsc();

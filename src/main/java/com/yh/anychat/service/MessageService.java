@@ -6,14 +6,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yh.anychat.model.ChatMessage;
-import com.yh.anychat.repository.ChatRepository;
+import com.yh.anychat.repository.MessageRepository;
 
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor // Automatically generates the constructor
-public class ChatService {
-    private final ChatRepository chatRepository;
+public class MessageService {
+    private final MessageRepository chatRepository;
 
     // Fetching all chat messages
     public List<ChatMessage> getAllChatMessages() {
