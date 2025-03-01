@@ -1,6 +1,8 @@
 package com.yh.anychat.model;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -9,34 +11,31 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "CHAT_MESSAGE") // Define table name explicitly
+@Table(name = "CHAT_ROOM") // Define table name explicitly
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatMessage {
+public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String sender;
+    private String name;
 
-    @Column(nullable = false)
-    private String content;
-
-    @ManyToOne
-    @Column(nullable = false)
-    @JoinColumn(name = "chatroom_id")
-    private ChatRoom chatRoom;
-
+    @Column(nullable = true)
+    private String description;
+    
     @CreationTimestamp
-    private LocalDateTime timestamp;
+    private LocalDateTime createdDateTime;
+
+    @ManyToMany(mappedBy = "chatRooms")
+    private Set<User> users = new HashSet<>();
 }
